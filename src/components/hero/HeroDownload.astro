@@ -17,6 +17,11 @@ const { title, description } = Astro.props;
 
 const currLocale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(currLocale);
+
+const macUrl =
+  "https://github.com/SoluDevTech/unispace-releases/releases/latest/download/Unispace-mac.dmg";
+const winUrl =
+  "https://github.com/SoluDevTech/unispace-releases/releases/latest/download/Unispace-win.exe";
 ---
 
 <section id="hero-download" class="mt-14 overflow-x-clip">
@@ -47,33 +52,36 @@ const t = useTranslations(currLocale);
       >
         <Button
           variant="primary"
-          href="/unispace-setup.dmg"
+          href={macUrl}
           id="hero-download-btn"
+          data-win-url={winUrl}
+          data-mac-url={macUrl}
           class="px-8 py-3 text-lg"
         >
-          <Icon name="tabler/download" class="mr-2 size-5" />
+          <Icon name="tabler/download" id="hero-icon-default" class="mr-2 size-5" />
+          <Icon name="tabler/brand-apple" id="hero-icon-apple" class="mr-2 hidden size-5" />
+          <Icon name="tabler/brand-windows" id="hero-icon-windows" class="mr-2 hidden size-5" />
           {t("download")}
+          <span
+            id="hero-download-os"
+            class="ml-1"
+            data-windows={t("for_windows")}
+            data-macos={t("for_macos")}
+          >
+          </span>
         </Button>
 
         <div id="hero-platform-links" class="flex items-center gap-6">
           <a
-            href="/unispace-setup.dmg"
-            data-platform="mac-silicon"
+            href={macUrl}
+            data-platform="mac"
             class="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors"
           >
             <Icon name="tabler/brand-apple" class="size-4" />
-            Apple Silicon
+            macOS
           </a>
           <a
-            href="/unispace-setup.dmg"
-            data-platform="mac-intel"
-            class="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors"
-          >
-            <Icon name="tabler/brand-apple" class="size-4" />
-            Apple Intel
-          </a>
-          <a
-            href="/unispace-setup.exe"
+            href={winUrl}
             data-platform="windows"
             class="text-muted-foreground hover:text-foreground flex items-center gap-1.5 text-sm transition-colors"
           >
@@ -81,6 +89,16 @@ const t = useTranslations(currLocale);
             Windows
           </a>
         </div>
+
+        <a
+          href="https://github.com/SoluDevTech/unispace-releases/releases"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-xs transition-colors"
+        >
+          <Icon name="tabler/external-link" class="size-3" />
+          {t("all_versions")}
+        </a>
       </div>
     </div>
   </div>
@@ -97,7 +115,27 @@ const t = useTranslations(currLocale);
     if (!btn) return;
 
     if (isWindows) {
-      btn.href = "/unispace-setup.exe";
+      btn.href = btn.dataset.winUrl ?? btn.href;
+    } else if (isMac) {
+      btn.href = btn.dataset.macUrl ?? btn.href;
+    }
+
+    const osSpan = document.getElementById("hero-download-os");
+    if (osSpan) {
+      if (isWindows) osSpan.textContent = osSpan.dataset.windows ?? "";
+      else if (isMac) osSpan.textContent = osSpan.dataset.macos ?? "";
+    }
+
+    const iconDefault = document.getElementById("hero-icon-default");
+    const iconApple = document.getElementById("hero-icon-apple");
+    const iconWindows = document.getElementById("hero-icon-windows");
+
+    if (isMac && iconDefault && iconApple) {
+      iconDefault.classList.add("hidden");
+      iconApple.classList.remove("hidden");
+    } else if (isWindows && iconDefault && iconWindows) {
+      iconDefault.classList.add("hidden");
+      iconWindows.classList.remove("hidden");
     }
 
     const links = document.getElementById("hero-platform-links");
@@ -106,7 +144,7 @@ const t = useTranslations(currLocale);
     const activeLink = isWindows
       ? links.querySelector<HTMLElement>('[data-platform="windows"]')
       : isMac
-        ? links.querySelector<HTMLElement>('[data-platform="mac-silicon"]')
+        ? links.querySelector<HTMLElement>('[data-platform="mac"]')
         : null;
 
     if (activeLink) {
