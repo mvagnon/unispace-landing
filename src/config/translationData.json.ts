@@ -58,6 +58,10 @@ export const textTranslations = {
     for_windows: "for Windows",
     for_macos: "for macOS",
     all_versions: "All versions",
+    monthly: "Monthly",
+    yearly: "Yearly",
+    paid_monthly: "paid monthly",
+    paid_yearly: "paid yearly",
 
     // blog
     back_to_all_posts: "Back to all posts",
@@ -75,6 +79,10 @@ export const textTranslations = {
     for_windows: "pour Windows",
     for_macos: "pour macOS",
     all_versions: "Toutes les versions",
+    monthly: "Mensuel",
+    yearly: "Annuel",
+    paid_monthly: "facturé mensuellement",
+    paid_yearly: "facturé annuellement",
 
     // blog
     back_to_all_posts: "Retour à tous les articles",

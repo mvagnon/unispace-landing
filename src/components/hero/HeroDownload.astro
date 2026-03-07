@@ -24,8 +24,29 @@ const winUrl =
   "https://github.com/SoluDevTech/unispace-releases/releases/latest/download/Unispace-win.exe";
 ---
 
-<section id="hero-download" class="mt-14 overflow-x-clip">
-  <div class="site-container py-16 md:py-20">
+<section id="hero-download" class="relative mt-14 overflow-x-clip">
+  <!-- Backdrop Grid Pattern -->
+  <div class="text-foreground absolute inset-0" aria-hidden="true">
+    <svg class="absolute h-full w-full opacity-8" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="hero-grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+        </pattern>
+        <radialGradient id="oval-fade" cx="50%" cy="50%" r="40%" fx="50%" fy="50%">
+          <stop offset="0%" stop-color="white" stop-opacity="1"></stop>
+          <stop offset="40%" stop-color="white" stop-opacity="0.7"></stop>
+          <stop offset="70%" stop-color="white" stop-opacity="0.3"></stop>
+          <stop offset="100%" stop-color="white" stop-opacity="0"></stop>
+        </radialGradient>
+        <mask id="fade-mask">
+          <ellipse cx="50%" cy="50%" rx="65%" ry="55%" fill="url(#oval-fade)"></ellipse>
+        </mask>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#hero-grid-pattern)" mask="url(#fade-mask)"></rect>
+    </svg>
+  </div>
+
+  <div class="site-container relative z-10 py-16 md:py-20">
     <div class="mx-auto max-w-3xl text-center">
       <div data-mos="fade-up" data-mos-anchor="#hero-download">
         <h1
@@ -100,9 +121,58 @@ const winUrl =
           {t("all_versions")}
         </a>
       </div>
+
+      <!-- Video Preview -->
+      <div class="mt-12" data-mos="fade-up" data-mos-delay=".3" data-mos-anchor="#hero-download">
+        <div
+          id="hero-video-preview"
+          class="group border-border relative cursor-pointer overflow-hidden rounded-xl border shadow-lg transition-shadow hover:shadow-xl"
+        >
+          <video
+            src="/videos/unispace-v3.mp4"
+            muted
+            autoplay
+            loop
+            playsinline
+            class="aspect-video w-full object-cover"></video>
+          <div
+            class="absolute inset-0 flex items-center justify-center bg-black/20 transition-colors group-hover:bg-black/10"
+          >
+            <div
+              class="flex size-14 items-center justify-center rounded-full bg-white/90 shadow-md transition-transform group-hover:scale-110"
+            >
+              <Icon name="tabler/player-play" class="ml-0.5 size-6 text-black" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
+<!-- Video Lightbox -->
+<div id="hero-video-lightbox" class="fixed inset-0 z-50 hidden items-center justify-center">
+  <div
+    id="hero-video-backdrop"
+    class="absolute inset-0 bg-black/80 opacity-0 transition-opacity duration-300"
+  >
+  </div>
+  <div id="hero-video-container" class="relative z-10 transition-all duration-500 ease-out">
+    <video
+      id="hero-video-expanded"
+      src="/videos/unispace-v3.mp4"
+      controls
+      playsinline
+      class="h-full w-full rounded-lg object-contain shadow-2xl"></video>
+    <button
+      id="hero-video-close"
+      class="hover:bg-card bg-background text-foreground absolute -top-4 -right-4 flex size-8 items-center justify-center rounded-full shadow-md transition-colors"
+      aria-label="Close video"
+    >
+      <Icon name="tabler/x" class="size-6" />
+    </button>
+  </div>
+</div>
 
 <script>
   function setupOsDetection() {
@@ -155,4 +225,107 @@ const winUrl =
 
   setupOsDetection();
   document.addEventListener("astro:after-swap", setupOsDetection);
+</script>
+
+<script>
+  import { animate } from "motion";
+
+  function setupVideoLightbox() {
+    const preview = document.getElementById("hero-video-preview");
+    const lightbox = document.getElementById("hero-video-lightbox") as HTMLDivElement | null;
+    const backdrop = document.getElementById("hero-video-backdrop") as HTMLDivElement | null;
+    const container = document.getElementById("hero-video-container") as HTMLDivElement | null;
+    const expandedVideo = document.getElementById("hero-video-expanded") as HTMLVideoElement | null;
+    const closeBtn = document.getElementById("hero-video-close");
+
+    if (!preview || !lightbox || !backdrop || !container || !expandedVideo || !closeBtn) return;
+
+    if (lightbox.parentElement !== document.body) {
+      document.body.appendChild(lightbox);
+    }
+
+    const openLightbox = () => {
+      const rect = preview.getBoundingClientRect();
+      const videoRatio = 16 / 9;
+
+      const maxWidth = window.innerWidth * 0.9;
+      const maxHeight = window.innerHeight * 0.9;
+      let targetWidth: number;
+      let targetHeight: number;
+
+      if (maxWidth / videoRatio <= maxHeight) {
+        targetWidth = maxWidth;
+        targetHeight = maxWidth / videoRatio;
+      } else {
+        targetHeight = maxHeight;
+        targetWidth = maxHeight * videoRatio;
+      }
+
+      const targetTop = (window.innerHeight - targetHeight) / 2;
+      const targetLeft = (window.innerWidth - targetWidth) / 2;
+
+      Object.assign(container.style, {
+        position: "fixed",
+        top: `${rect.top}px`,
+        left: `${rect.left}px`,
+        width: `${rect.width}px`,
+        height: `${rect.height}px`,
+        zIndex: "100",
+      });
+
+      lightbox.classList.replace("hidden", "flex");
+      backdrop.style.opacity = "1";
+      preview.style.opacity = "0";
+
+      expandedVideo.currentTime = 0;
+      expandedVideo.play();
+
+      animate(
+        container,
+        {
+          top: [rect.top, targetTop],
+          left: [rect.left, targetLeft],
+          width: [rect.width, targetWidth],
+          height: [rect.height, targetHeight],
+        },
+        { duration: 0.4, ease: "easeInOut" },
+      );
+    };
+
+    const closeLightbox = async () => {
+      const rect = preview.getBoundingClientRect();
+
+      backdrop.style.opacity = "0";
+      expandedVideo.pause();
+
+      await animate(
+        container,
+        {
+          top: rect.top,
+          left: rect.left,
+          width: rect.width,
+          height: rect.height,
+        },
+        { duration: 0.4, ease: "easeInOut" },
+      ).finished;
+
+      preview.style.opacity = "1";
+      lightbox.classList.replace("flex", "hidden");
+      container.removeAttribute("style");
+    };
+
+    preview.addEventListener("click", openLightbox);
+    closeBtn.addEventListener("click", closeLightbox);
+
+    backdrop.addEventListener("click", closeLightbox);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !lightbox.classList.contains("hidden")) {
+        closeLightbox();
+      }
+    });
+  }
+
+  setupVideoLightbox();
+  document.addEventListener("astro:after-swap", setupVideoLightbox);
 </script>

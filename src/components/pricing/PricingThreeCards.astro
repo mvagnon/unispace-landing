@@ -42,11 +42,7 @@ interface Props {
   currency?: string;
 }
 
-const {
-  title = "A plan for every business",
-  plans,
-  currency = "$",
-} = Astro.props;
+const { title = "A plan for every business", plans, currency = "$" } = Astro.props;
 
 const defaultPricingData: pricingItem[] = [
   {
@@ -109,9 +105,9 @@ const t = useTranslations(currLocale);
         for="pricing-plan__toggle"
         class="relative inline-flex cursor-pointer items-center gap-4 select-none"
       >
-        <span class="description flex items-center">Monthly</span>
+        <span class="description flex items-center">{t("monthly")}</span>
         <Switch id="pricing-three-cards__toggle" variant="primary" padding={4} />
-        <span class="description flex items-center">Yearly</span>
+        <span class="description flex items-center">{t("yearly")}</span>
       </label>
     </div>
 
@@ -155,12 +151,18 @@ const t = useTranslations(currLocale);
                 ) : (
                   <>
                     <div class="pricing-monthly">
-                      <h4 class="text-4xl font-medium">{currency}{plan.price.monthly} / mo</h4>
-                      <span class="description inline-block text-sm">(paid monthly)</span>
+                      <h4 class="text-4xl font-medium">
+                        {currency}
+                        {plan.price.monthly} / mo
+                      </h4>
+                      <span class="description inline-block text-sm">({t("paid_monthly")})</span>
                     </div>
                     <div class="pricing-yearly hidden">
-                      <h4 class="text-4xl font-medium">{currency}{plan.price.yearly} / mo</h4>
-                      <span class="description inline-block text-sm">(paid yearly)</span>
+                      <h4 class="text-4xl font-medium">
+                        {currency}
+                        {plan.price.yearly} / mo
+                      </h4>
+                      <span class="description inline-block text-sm">({t("paid_yearly")})</span>
                     </div>
                   </>
                 )}
