@@ -7,15 +7,15 @@ import { type navItem } from "../types/configDataTypes";
 const navConfig: navItem[] = [
   {
     text: "Features",
-    link: "/#feature-cards-small",
+    link: "/#features",
   },
   {
     text: "Pricing",
-    link: "/#pricing-three-cards",
+    link: "/#pricing",
   },
   {
     text: "FAQ",
-    link: "/#faq-accordions",
+    link: "/#faq",
   },
 ];
 

@@ -90,7 +90,7 @@ const currLocale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(currLocale);
 ---
 
-<section id="pricing-three-cards" class="py-16 md:py-20">
+<section id="pricing" class="py-16 md:py-20">
   <div class="site-container relative">
     <div class="flex justify-center">
       <!-- <Badge>Pricing</Badge> -->
@@ -106,7 +106,7 @@ const t = useTranslations(currLocale);
         class="relative inline-flex cursor-pointer items-center gap-4 select-none"
       >
         <span class="description flex items-center">{t("monthly")}</span>
-        <Switch id="pricing-three-cards__toggle" variant="primary" padding={4} />
+        <Switch id="pricing__toggle" variant="primary" padding={4} />
         <span class="description flex items-center">{t("yearly")}</span>
       </label>
     </div>
@@ -220,8 +220,8 @@ const t = useTranslations(currLocale);
   import type { SwitchChangeEvent } from "@/components/starwind/switch";
 
   function pricingPlanToggleSetup() {
-    const pricingSection = document.getElementById("pricing-three-cards");
-    const toggle = pricingSection?.querySelector("#pricing-three-cards__toggle");
+    const pricingSection = document.getElementById("pricing");
+    const toggle = pricingSection?.querySelector("#pricing__toggle");
     const monthlyPrices = pricingSection?.querySelectorAll(".pricing-monthly");
     const yearlyPrices = pricingSection?.querySelectorAll(".pricing-yearly");
 

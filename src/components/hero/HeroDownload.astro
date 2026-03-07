@@ -24,7 +24,7 @@ const winUrl =
   "https://github.com/SoluDevTech/unispace-releases/releases/latest/download/Unispace-win.exe";
 ---
 
-<section id="hero-download" class="relative mt-14 overflow-x-clip">
+<section id="download" class="relative mt-14 overflow-x-clip">
   <!-- Backdrop Grid Pattern -->
   <div class="text-foreground absolute inset-0" aria-hidden="true">
     <svg class="absolute h-full w-full opacity-8" xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +48,7 @@ const winUrl =
 
   <div class="site-container relative z-10 py-16 md:py-20">
     <div class="mx-auto max-w-3xl text-center">
-      <div data-mos="fade-up" data-mos-anchor="#hero-download">
+      <div data-mos="fade-up" data-mos-anchor="#download">
         <h1
           class="mb-6 text-5xl leading-tight font-medium tracking-tight text-pretty md:text-6xl md:leading-tight"
         >
@@ -60,7 +60,7 @@ const winUrl =
         class="description mb-10 text-pretty lg:text-lg"
         data-mos="fade-up"
         data-mos-delay=".1"
-        data-mos-anchor="#hero-download"
+        data-mos-anchor="#download"
       >
         {description}
       </p>
@@ -68,13 +68,13 @@ const winUrl =
       <div
         data-mos="fade-up"
         data-mos-delay=".2"
-        data-mos-anchor="#hero-download"
+        data-mos-anchor="#download"
         class="flex flex-col items-center gap-5"
       >
         <Button
           variant="primary"
           href={macUrl}
-          id="hero-download-btn"
+          id="download-btn"
           data-win-url={winUrl}
           data-mac-url={macUrl}
           class="px-8 py-3 text-lg"
@@ -84,7 +84,7 @@ const winUrl =
           <Icon name="tabler/brand-windows" id="hero-icon-windows" class="mr-2 hidden size-5" />
           {t("download")}
           <span
-            id="hero-download-os"
+            id="download-os"
             class="ml-1"
             data-windows={t("for_windows")}
             data-macos={t("for_macos")}
@@ -123,7 +123,7 @@ const winUrl =
       </div>
 
       <!-- Video Preview -->
-      <div class="mt-12" data-mos="fade-up" data-mos-delay=".3" data-mos-anchor="#hero-download">
+      <div class="mt-12" data-mos="fade-up" data-mos-delay=".3" data-mos-anchor="#download">
         <div
           id="hero-video-preview"
           class="group border-border relative cursor-pointer overflow-hidden rounded-xl border shadow-lg transition-shadow hover:shadow-xl"
@@ -181,7 +181,7 @@ const winUrl =
     const isMac = platform.includes("mac") || userAgent.includes("macintosh");
     const isWindows = platform.includes("win") || userAgent.includes("windows");
 
-    const btn = document.getElementById("hero-download-btn") as HTMLAnchorElement | null;
+    const btn = document.getElementById("download-btn") as HTMLAnchorElement | null;
     if (!btn) return;
 
     if (isWindows) {
@@ -190,7 +190,7 @@ const winUrl =
       btn.href = btn.dataset.macUrl ?? btn.href;
     }
 
-    const osSpan = document.getElementById("hero-download-os");
+    const osSpan = document.getElementById("download-os");
     if (osSpan) {
       if (isWindows) osSpan.textContent = osSpan.dataset.windows ?? "";
       else if (isMac) osSpan.textContent = osSpan.dataset.macos ?? "";
